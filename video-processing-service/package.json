@@ -1,0 +1,28 @@
+{
+  "name": "video-processing-service",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Transcodes uploads into an HLS ladder with FFmpeg. Runs on Cloud Run.",
+  "main": "dist/src/index.js",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "start": "node dist/src/index.js",
+    "test": "tsx --test test/*.test.ts",
+    "test:unit": "tsx --test test/args.test.ts test/probe.test.ts test/processor.test.ts"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@google-cloud/storage": "^7.13.0",
+    "express": "^4.21.1",
+    "firebase-admin": "^12.6.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.16.0",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.3"
+  }
+}
