@@ -11,8 +11,8 @@ jobs:
       run:
         working-directory: video-processing-service
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: 20
       - run: sudo apt-get update && sudo apt-get install -y ffmpeg
@@ -29,8 +29,8 @@ jobs:
       run:
         working-directory: api-service
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: 20
       - run: npm install
@@ -50,8 +50,8 @@ jobs:
       NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ci-project.appspot.com
       NEXT_PUBLIC_FIREBASE_APP_ID: 1:000:web:000
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: 20
       - run: npm install
