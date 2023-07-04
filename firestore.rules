@@ -1,0 +1,26 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{db}/documents {
+    match /users/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow write: if false; // created by the createUser function
+    }
+
+    // Written by the functions and the processing service only.
+    match /videos/{id} {
+      allow read: if resource.data.status == 'processed'
+                  || (request.auth != null && resource.data.uid == request.auth.uid);
+      allow write: if false;
+    }
+
+    // The watch page logs one doc per viewing session.
+    match /playbackSessions/{id} {
+      allow create: if request.auth != null
+                    && request.resource.data.uid == request.auth.uid
+                    && request.resource.data.keys().hasOnly(
+                         ['uid', 'videoId', 'startedAt', 'ttffMs', 'rebufferCount',
+                          'rebufferMs', 'watchedSec', 'switches', 'userAgent']);
+      allow read, update, delete: if false;
+    }
+  }
+}
