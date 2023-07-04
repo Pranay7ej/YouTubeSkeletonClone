@@ -1,0 +1,9 @@
+node_modules/
+dist/
+api-service/lib/
+.next/
+out/
+.env*.local
+*.tsbuildinfo
+.firebase/
+firebase-debug.log

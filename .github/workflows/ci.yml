@@ -1,0 +1,60 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  video-processing-service:
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: video-processing-service
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - run: npm install
+      - run: npm run typecheck
+      - name: Unit + integration tests (real FFmpeg transcode)
+        run: npm test
+      - name: Docker image builds
+        run: docker build -t video-processing-service .
+
+  api-service:
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: api-service
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install
+      - run: npm run typecheck
+      - run: npm test
+
+  web-client:
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: web-client
+    env:
+      # Placeholders so the static build can initialise Firebase.
+      NEXT_PUBLIC_FIREBASE_API_KEY: ci-placeholder
+      NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ci.firebaseapp.com
+      NEXT_PUBLIC_FIREBASE_PROJECT_ID: ci-project
+      NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ci-project.appspot.com
+      NEXT_PUBLIC_FIREBASE_APP_ID: 1:000:web:000
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install
+      - run: npm test
+      - run: npm run build
+      - run: npm run typecheck
